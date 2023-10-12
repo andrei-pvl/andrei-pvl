@@ -1,9 +1,8 @@
-using MoneySumTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using MoneySum;
+using MoneySumm;
 
-namespace MoneySumTest
+namespace MoneySummTest
 {
     [TestClass]
     public class MoneyTest
@@ -43,68 +42,58 @@ namespace MoneySumTest
             Assert.AreEqual(expected, actual);
         }
 
-        
         [TestMethod]
-        public void SumOfSum_SumOfSumForSameVal_ReturnsSumOfSum()
+        public void Add_AddSumForSameValSum_ReturnsSumOfSum()
         {
             Money money1 = new Money(100, "USD", 1.0);
             Money money2 = new Money(25, "USD", 1.0);
-            IMoney result = new Money();
-            
-            double expected = 125;
-            double actual = result.SumOfSum(money1, money2);
+            Money result = new Money(125, "USD", 1.0);
 
-            Assert.AreEqual(expected, actual);        
-        }        
-       
-        [TestMethod]
-        public void SumOfSum_SumOfSumForSameValAndZeroSum_ReturnsSumOfSum()
-        {
-            Money money1 = new Money(100, "USD", 1.0);
-            Money money2 = new Money(0, "USD", 1.0);
-            IMoney result = new Money();
-
-            double expected = 100;
-            double actual = result.SumOfSum(money1, money2);
+            Money expected = result;
+            Money actual = money2.Add(money1);
 
             Assert.AreEqual(expected, actual);
         }
 
-        
         [TestMethod]
-        public void Calculate_CalculateInUsdTwoDifferentVal_ReturnsTwoSum()
+        public void Add_AddSumForDifferentValSum_ReturnsSumOfSum()
         {
-            Money money1 = new Money(100, "EUR", 0.85);
-            Money money2 = new Money(50, "GBR", 1.35);
-            IMoney result = new Money();
+            Money money1 = new Money(50, "GBR", 1.35);
+            Money money2 = new Money(25, "EUR", 0.85);
+            Money result = new Money(88.75, "USD");
 
-            double result1 = money1.Calculate(money1);
-            double result2 = money2.Calculate(money2);
+            Money expected = result;
+            Money actual = money2.Add(money1);
 
-            double expected1 = 85;
-            double actual1 = result1;
+            Assert.AreEqual(expected, actual);
+        }
 
-            double expected2 = 67.5;
-            double actual2 = result2;
+        [TestMethod]
 
-            Assert.AreEqual(expected1, actual1);
-            Assert.AreEqual(expected2, actual2);
+        public void Add_AddSumForSameValAndZeroSum_ReturnsSumOfSum()
+        {
+            Money money1 = new Money(100, "USD", 1.0);
+            Money money2 = new Money(0, "USD", 1.0);
+            Money result = new Money(100, "USD", 1.0);
+
+            Money expected = result;
+            Money actual = money2.Add(money1);
+
+            Assert.AreEqual(expected, actual);
         }
         
-
         [TestMethod]
         public void Calculate_ConvertsSumToUsd_ReturnsSumInUsd()
         {
             Money money = new Money(100, "EUR", 0.85);
-            IMoney result = new Money();
+            Money result = new Money(85, "USD", 1.0);
 
-            double expected = 85;
-            double actual = result.Calculate(money);
+            Money expected = result;
+            Money actual = money.Calculate(money);
 
             Assert.AreEqual(expected, actual);
         }
-
-
+        
         [TestMethod]
         public void ToString_ConvertsSumToString_ReturnsString()
         {
@@ -116,23 +105,21 @@ namespace MoneySumTest
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod]
-        public void Sum_Constructor_ReturnsException()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Sum_IncorrectSum_ThrowException()
         {
-            const double SUM = -547;
-            IMoney money = new Money();
+            Money money1 = new Money(-62, "USD", 1.0);
+            Money money2 = null;
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => money.Sum = SUM);
+            money2.Add(money1);
         }
 
         [TestMethod]
-        public void CursUsd_Constructor_ReturnsException()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CursUsd_IncorrectCursUsd_ThrowException()
         {
-            const double CURS_USD = -1;
-            IMoney money = new Money();
-
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => money.CursUsd = CURS_USD);
-        } 
+            Money money1 = new Money(26, "EUR", -68);
+        }
     }
 }
