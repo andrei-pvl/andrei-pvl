@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MoneySum
+namespace MoneySumm
 {
     public class Money : IMoney
     {
@@ -12,7 +9,8 @@ namespace MoneySum
         public double Sum
         {
             get => _sum;
-            set => _sum = value < 0 ? throw new ArgumentOutOfRangeException("Sum must be >= 0") : value;
+            set => _sum = value < 0 ?
+           throw new ArgumentOutOfRangeException("Sum must be >= 0") : value;
         }
 
         public string CodVal { get; set; }
@@ -21,14 +19,19 @@ namespace MoneySum
         public double CursUsd
         {
             get => _cursusd;
-            set => _cursusd = value <= 0 ? throw new ArgumentOutOfRangeException("CursUsd must be > 0") : value;
+            set => _cursusd = value <= 0 ?
+           throw new ArgumentOutOfRangeException("CursUsd must be > 0") : value;
         }
-
 
         public Money()
         {
         }
-        
+        public Money(double sum, string codVal)
+        {
+            Sum = sum;
+            CodVal = codVal;
+        }
+
         public Money(double sum, string codVal, double cursUsd)
         {
             Sum = sum;
@@ -36,22 +39,25 @@ namespace MoneySum
             CursUsd = cursUsd;
         }
 
-        
-        public bool Equals(Money money)        
+        public override bool Equals(object obj)
         {
-            if (money == null) return false;
-            return Sum == money.Sum && CodVal == money.CodVal;
+            if (obj == null) return false;
+            Money money = obj as Money;
+
+            return Sum.Equals(money.Sum) && CodVal.Equals(money.CodVal);
         }
 
-        public double SumOfSum(Money money1, Money money2)
+        public Money Add(Money money1)
         {
-            double sum = money1.Sum + money2.Sum;
-            return sum;
-        }
+            Money res = Calculate(money1);
+            Money res2 = Calculate(this);
 
-        public double Calculate(Money money)
+            Money result = new Money(res.Sum + res2.Sum,CodVal);
+            return result;
+        }
+        public Money Calculate(Money money)
         {
-            return money.Sum * money.CursUsd;
+            return new Money((money.Sum * money.CursUsd), CodVal = "USD");
         }
 
         public override string ToString()
@@ -69,3 +75,4 @@ namespace MoneySum
         }
     }
 }
+
